@@ -5,6 +5,7 @@ CHANGELOG
 ---
 
  * Add support for iterable of string in `StreamedResponse`
+ * Add `EventStreamResponse` and `ServerEvent` classes to streamline server event streaming
 
 7.2
 ---
