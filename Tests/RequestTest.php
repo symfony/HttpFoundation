@@ -310,7 +310,8 @@ class RequestTest extends TestCase
      *           ["foo\u0000"]
      *           [" foo"]
      *           ["foo "]
-     *           [":"]
+     *           ["//"]
+     *           ["foo:bar"]
      */
     public function testCreateWithBadRequestUri(string $uri)
     {
