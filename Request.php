@@ -301,8 +301,7 @@ class Request
         $server['PATH_INFO'] = '';
         $server['REQUEST_METHOD'] = strtoupper($method);
 
-        $components = parse_url($uri);
-        if (false === $components) {
+        if (false === $components = parse_url(\strlen($uri) !== strcspn($uri, '?#') ? $uri : $uri.'#')) {
             throw new BadRequestException('Invalid URI.');
         }
 
@@ -325,9 +324,11 @@ class Request
             if ('https' === $components['scheme']) {
                 $server['HTTPS'] = 'on';
                 $server['SERVER_PORT'] = 443;
-            } else {
+            } elseif ('http' === $components['scheme']) {
                 unset($server['HTTPS']);
                 $server['SERVER_PORT'] = 80;
+            } else {
+                throw new BadRequestException('Invalid URI: http(s) scheme expected.');
             }
         }
 
