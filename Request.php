@@ -374,11 +374,9 @@ class Request
             if ('https' === $components['scheme']) {
                 $server['HTTPS'] = 'on';
                 $server['SERVER_PORT'] = 443;
-            } elseif ('http' === $components['scheme']) {
+            } else {
                 unset($server['HTTPS']);
                 $server['SERVER_PORT'] = 80;
-            } else {
-                throw new BadRequestException('Invalid URI: http(s) scheme expected.');
             }
         }
 
