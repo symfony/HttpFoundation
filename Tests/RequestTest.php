@@ -2668,16 +2668,6 @@ class RequestTest extends TestCase
             $this->assertNotSame(0b10000000, $value, sprintf('The constant "%s" should not use the reserved value "0b10000000".', $constant));
         }
     }
-
-    /**
-     * @group legacy
-     */
-    public function testInvalidUriCreationDeprecated()
-    {
-        $this->expectDeprecation('Since symfony/http-foundation 6.3: Calling "Symfony\Component\HttpFoundation\Request::create()" with an invalid URI is deprecated.');
-        $request = Request::create('/invalid-path:123');
-        $this->assertEquals('http://localhost/invalid-path:123', $request->getUri());
-    }
 }
 
 class RequestContentProxy extends Request
