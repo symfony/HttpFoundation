@@ -46,7 +46,7 @@ class UriSigner
      *
      * The expiration is added as a query string parameter.
      */
-    public function sign(string $uri/*, \DateTimeInterface|\DateInterval|int|null $expiration = null*/): string
+    public function sign(string $uri/* , \DateTimeInterface|\DateInterval|int|null $expiration = null */): string
     {
         $expiration = null;
 
@@ -55,7 +55,7 @@ class UriSigner
         }
 
         if (null !== $expiration && !$expiration instanceof \DateTimeInterface && !$expiration instanceof \DateInterval && !\is_int($expiration)) {
-            throw new \TypeError(\sprintf('The second argument of %s() must be an instance of %s or %s, an integer or null (%s given).', __METHOD__, \DateTimeInterface::class, \DateInterval::class, get_debug_type($expiration)));
+            throw new \TypeError(\sprintf('The second argument of "%s()" must be an instance of "%s" or "%s", an integer or null (%s given).', __METHOD__, \DateTimeInterface::class, \DateInterval::class, get_debug_type($expiration)));
         }
 
         $url = parse_url($uri);
@@ -103,7 +103,8 @@ class UriSigner
         $hash = $params[$this->hashParameter];
         unset($params[$this->hashParameter]);
 
-        if (!hash_equals($this->computeHash($this->buildUrl($url, $params)), $hash)) {
+        // In 8.0, remove support for non-url-safe tokens
+        if (!hash_equals($this->computeHash($this->buildUrl($url, $params)), strtr(rtrim($hash, '='), ['/' => '_', '+' => '-']))) {
             return false;
         }
 
@@ -124,7 +125,7 @@ class UriSigner
 
     private function computeHash(string $uri): string
     {
-        return base64_encode(hash_hmac('sha256', $uri, $this->secret, true));
+        return strtr(rtrim(base64_encode(hash_hmac('sha256', $uri, $this->secret, true)), '='), ['/' => '_', '+' => '-']);
     }
 
     private function buildUrl(array $url, array $params = []): string

@@ -70,13 +70,13 @@ class UriSignerTest extends TestCase
             $signer = new UriSigner('foobar');
 
             $this->assertSame(
-                'http://example.com/foo?_hash=rIOcC%2FF3DoEGo%2FvnESjSp7uU9zA9S%2F%2BOLhxgMexoPUM%3D&baz=bay&foo=bar',
+                'http://example.com/foo?_hash=rIOcC_F3DoEGo_vnESjSp7uU9zA9S_-OLhxgMexoPUM&baz=bay&foo=bar',
                 $signer->sign('http://example.com/foo?foo=bar&baz=bay')
             );
             $this->assertTrue($signer->check($signer->sign('http://example.com/foo?foo=bar&baz=bay')));
 
             $this->assertSame(
-                'http://example.com/foo?_expiration=2145916800&_hash=xLhnPMzV3KqqHaaUffBUJvtRDAZ4%2FZ9Y8Sw%2BgmS%2B82Q%3D&baz=bay&foo=bar',
+                'http://example.com/foo?_expiration=2145916800&_hash=xLhnPMzV3KqqHaaUffBUJvtRDAZ4_Z9Y8Sw-gmS-82Q&baz=bay&foo=bar',
                 $signer->sign('http://example.com/foo?foo=bar&baz=bay', new \DateTimeImmutable('2038-01-01 00:00:00', new \DateTimeZone('UTC')))
             );
             $this->assertTrue($signer->check($signer->sign('http://example.com/foo?foo=bar&baz=bay', new \DateTimeImmutable('2099-01-01 00:00:00'))));
@@ -103,13 +103,13 @@ class UriSignerTest extends TestCase
         $signer = new UriSigner('foobar', 'qux', 'abc');
 
         $this->assertSame(
-            'http://example.com/foo?baz=bay&foo=bar&qux=rIOcC%2FF3DoEGo%2FvnESjSp7uU9zA9S%2F%2BOLhxgMexoPUM%3D',
+            'http://example.com/foo?baz=bay&foo=bar&qux=rIOcC_F3DoEGo_vnESjSp7uU9zA9S_-OLhxgMexoPUM',
             $signer->sign('http://example.com/foo?foo=bar&baz=bay')
         );
         $this->assertTrue($signer->check($signer->sign('http://example.com/foo?foo=bar&baz=bay')));
 
         $this->assertSame(
-            'http://example.com/foo?abc=2145916800&baz=bay&foo=bar&qux=kE4rK2MzeiwrYAKy%2B%2FGKvKA6bnzqCbACBdpC3yGnPVU%3D',
+            'http://example.com/foo?abc=2145916800&baz=bay&foo=bar&qux=kE4rK2MzeiwrYAKy-_GKvKA6bnzqCbACBdpC3yGnPVU',
             $signer->sign('http://example.com/foo?foo=bar&baz=bay', new \DateTimeImmutable('2038-01-01 00:00:00', new \DateTimeZone('UTC')))
         );
         $this->assertTrue($signer->check($signer->sign('http://example.com/foo?foo=bar&baz=bay', new \DateTimeImmutable('2099-01-01 00:00:00'))));
@@ -120,14 +120,14 @@ class UriSignerTest extends TestCase
         $signer = new UriSigner('foobar');
 
         $this->assertSame(
-            'http://example.com/foo?_hash=EhpAUyEobiM3QTrKxoLOtQq5IsWyWedoXDPqIjzNj5o%3D&bar=foo&foo=bar#foobar',
+            'http://example.com/foo?_hash=EhpAUyEobiM3QTrKxoLOtQq5IsWyWedoXDPqIjzNj5o&bar=foo&foo=bar#foobar',
             $signer->sign('http://example.com/foo?bar=foo&foo=bar#foobar')
         );
 
         $this->assertTrue($signer->check($signer->sign('http://example.com/foo?bar=foo&foo=bar#foobar')));
 
         $this->assertSame(
-            'http://example.com/foo?_expiration=2145916800&_hash=jTdrIE9MJSorNpQmkX6tmOtocxXtHDzIJawcAW4IFYo%3D&bar=foo&foo=bar#foobar',
+            'http://example.com/foo?_expiration=2145916800&_hash=jTdrIE9MJSorNpQmkX6tmOtocxXtHDzIJawcAW4IFYo&bar=foo&foo=bar#foobar',
             $signer->sign('http://example.com/foo?bar=foo&foo=bar#foobar', new \DateTimeImmutable('2038-01-01 00:00:00', new \DateTimeZone('UTC')))
         );
 
@@ -197,5 +197,11 @@ class UriSignerTest extends TestCase
         $this->assertFalse($signer->check($relativeUriFromNow1));
         $this->assertFalse($signer->check($relativeUriFromNow2));
         $this->assertFalse($signer->check($relativeUriFromNow3));
+    }
+
+    public function testNonUrlSafeBase64()
+    {
+        $signer = new UriSigner('foobar');
+        $this->assertTrue($signer->check('http://example.com/foo?_hash=rIOcC%2FF3DoEGo%2FvnESjSp7uU9zA9S%2F%2BOLhxgMexoPUM%3D&baz=bay&foo=bar'));
     }
 }
