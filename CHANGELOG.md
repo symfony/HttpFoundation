@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add support for iterable of string in `StreamedResponse`
+
 7.2
 ---
 
@@ -40,7 +45,7 @@ CHANGELOG
  * Add `UriSigner` from the HttpKernel component
  * Add `partitioned` flag to `Cookie` (CHIPS Cookie)
  * Add argument `bool $flush = true` to `Response::send()`
-* Make `MongoDbSessionHandler` instantiable with the mongodb extension directly
+ * Make `MongoDbSessionHandler` instantiable with the mongodb extension directly
 
 6.3
 ---
