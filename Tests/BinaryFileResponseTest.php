@@ -458,4 +458,15 @@ class BinaryFileResponseTest extends ResponseTestCase
         $string = ob_get_clean();
         $this->assertSame('foo,bar', $string);
     }
+
+    public function testCreateFromTemporaryFileWithoutMimeType()
+    {
+        $file = new \SplTempFileObject();
+        $file->fwrite('foo,bar');
+
+        $response = new BinaryFileResponse($file);
+        $response->prepare(new Request());
+
+        $this->assertSame('application/octet-stream', $response->headers->get('Content-Type'));
+    }
 }
