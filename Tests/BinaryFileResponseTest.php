@@ -468,4 +468,15 @@ class BinaryFileResponseTest extends ResponseTestCase
 
         $response->setChunkSize(0);
     }
+
+    public function testCreateFromTemporaryFileWithoutMimeType()
+    {
+        $file = new \SplTempFileObject();
+        $file->fwrite('foo,bar');
+
+        $response = new BinaryFileResponse($file);
+        $response->prepare(new Request());
+
+        $this->assertSame('application/octet-stream', $response->headers->get('Content-Type'));
+    }
 }

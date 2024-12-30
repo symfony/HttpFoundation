@@ -189,7 +189,12 @@ class BinaryFileResponse extends Response
         }
 
         if (!$this->headers->has('Content-Type')) {
-            $this->headers->set('Content-Type', $this->file->getMimeType() ?: 'application/octet-stream');
+            $mimeType = null;
+            if (!$this->tempFileObject) {
+                $mimeType = $this->file->getMimeType();
+            }
+
+            $this->headers->set('Content-Type', $mimeType ?: 'application/octet-stream');
         }
 
         parent::prepare($request);
